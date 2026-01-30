@@ -171,7 +171,8 @@ body {
   margin-bottom: 6px;
 }
 
-.editor__panel input {
+.editor__panel input,
+.editor__panel select {
   width: 100%;
   border-radius: 10px;
   border: 1px solid var(--border);
