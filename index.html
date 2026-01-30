@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>30分スケジュール管理</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="app__header">
+      <div>
+        <p class="app__subtitle">30分単位でタスクを管理</p>
+        <h1 class="app__title">スケジュール管理アプリ</h1>
+      </div>
+      <div class="app__date">
+        <label for="datePicker">日付</label>
+        <input id="datePicker" type="date" />
+      </div>
+    </header>
+
+    <section class="editor" aria-live="polite">
+      <h2 class="editor__title">タスク編集</h2>
+      <p class="editor__hint">時間をタップすると入力欄が開きます。</p>
+      <div class="editor__panel">
+        <div>
+          <label for="timeLabel">時間</label>
+          <input id="timeLabel" type="text" readonly />
+        </div>
+        <div>
+          <label for="taskInput">タスク名</label>
+          <input id="taskInput" type="text" placeholder="タスクを入力" />
+        </div>
+        <button id="saveButton" class="button" type="button">保存する</button>
+        <button id="clearButton" class="button button--ghost" type="button">削除</button>
+      </div>
+    </section>
+
+    <section class="timeline" aria-label="30分単位のスケジュール">
+      <div class="timeline__header">
+        <span>時間</span>
+        <span>タスク</span>
+      </div>
+      <div id="timelineGrid" class="timeline__grid" role="grid"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
