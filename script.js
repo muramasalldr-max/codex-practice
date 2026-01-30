@@ -1,11 +1,14 @@
 const timelineGrid = document.getElementById("timelineGrid");
 const datePicker = document.getElementById("datePicker");
-const timeLabel = document.getElementById("timeLabel");
+const timeSelect = document.getElementById("timeSelect");
 const taskInput = document.getElementById("taskInput");
 const saveButton = document.getElementById("saveButton");
 const clearButton = document.getElementById("clearButton");
 
 let activeSlot = null;
+
+const startHour = 9;
+const totalSlots = 26;
 
 const formatTime = (date) =>
   date.toLocaleTimeString("ja-JP", {
@@ -28,9 +31,6 @@ const renderTimeline = (dateValue) => {
   timelineGrid.innerHTML = "";
   const schedule = loadSchedule(dateValue);
   const baseDate = new Date(`${dateValue}T00:00:00`);
-
-  const startHour = 9;
-  const totalSlots = 26;
 
   for (let i = 0; i < totalSlots; i += 1) {
     const slotTime = new Date(
@@ -79,9 +79,38 @@ const setActiveSlot = (slot, task) => {
 
   activeSlot = slot;
   slot.classList.add("timeline__slot--active");
-  timeLabel.value = slot.dataset.time;
+  timeSelect.value = slot.dataset.time;
   taskInput.value = task;
   taskInput.focus();
+};
+
+const buildTimeOptions = () => {
+  timeSelect.innerHTML = "";
+  const baseDate = new Date();
+  baseDate.setHours(0, 0, 0, 0);
+
+  for (let i = 0; i < totalSlots; i += 1) {
+    const optionTime = new Date(
+      baseDate.getTime() + (startHour * 60 + i * 30) * 60 * 1000
+    );
+    const label = formatTime(optionTime);
+    const option = document.createElement("option");
+    option.value = label;
+    option.textContent = label;
+    timeSelect.appendChild(option);
+  }
+};
+
+const handleTimeChange = () => {
+  const selectedTime = timeSelect.value;
+  const nextActive = timelineGrid.querySelector(
+    `[data-time="${selectedTime}"]`
+  );
+  if (nextActive) {
+    const dateValue = datePicker.value;
+    const schedule = loadSchedule(dateValue);
+    setActiveSlot(nextActive, schedule[selectedTime] ?? "");
+  }
 };
 
 const handleSave = () => {
@@ -119,10 +148,14 @@ clearButton.addEventListener("click", handleClear);
 
 datePicker.addEventListener("change", () => {
   activeSlot = null;
-  timeLabel.value = "";
+  timeSelect.value = timeSelect.options[0]?.value ?? "";
   taskInput.value = "";
   renderTimeline(datePicker.value);
 });
 
 initDate();
+buildTimeOptions();
 renderTimeline(datePicker.value);
+handleTimeChange();
+
+timeSelect.addEventListener("change", handleTimeChange);
